@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Processus - Algorithmes DM, RM, EDF, LLF</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Arial';
+            background-color: #add8e6;
+            color: rgb(255, 255, 255);
+            font-weight:bold;
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+
+        h1 {
+            color: rgb(255, 255, 255);
+            font-weight:bold;
+        }
+
+        .task-table th, .task-table td {
+            text-align: center;
+        }
+
+        .btn-primary, .btn-danger, .btn-secondary {
+            margin: 5px;
+            font-size: 0.9rem;
+        }
+
+        .gantt-chart {
+            margin-top: 30px;
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: rgb(2, 26, 78);
+            color: white;
+            padding-top: 20px;
+            padding-left: 15px;
+        }
+
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .sidebar a:hover {
+            background-color: #2c3e50;
+        }
+
+        .sidebar h4 {
+            color: #ecf0f1;
+        }
+
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+
+        .form-row .form-group input {
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h4>Algorithmes</h4>
+        <!-- Sélecteur d'algorithmes -->
+        <form action="{{ url_for('dm_rm_edf_llf_page') }}" method="GET">
+            <div class="form-group">
+                <label for="algorithm">Choisir un algorithme</label>
+                <select name="algorithm" id="algorithm" class="form-control" onchange="this.form.submit()">
+                    <option value="RM" {% if algorithm == 'RM' %}selected{% endif %}>RM</option>
+                    <option value="DM" {% if algorithm == 'DM' %}selected{% endif %}>DM</option>
+                    <option value="EDF" {% if algorithm == 'EDF' %}selected{% endif %}>EDF</option>
+                    <option value="LLF" {% if algorithm == 'LLF' %}selected{% endif %}>LLF</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <div class="content">
+        <h1 class="text-center">Gestion des Algorithmes de Planification</h1>
+        
+        <!-- Formulaire d'ajout de processus -->
+        <form action="{{ url_for('dm_rm_edf_llf_page') }}" method="POST" class="mb-4">
+            <h4>Ajouter un Processus</h4>
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                    <label for="burst_time">Burst Time</label>
+                    <input type="number" name="burst_time" id="burst_time" class="form-control" required>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="arrival_time">Arrival Time</label>
+                    <input type="number" name="arrival_time" id="arrival_time" class="form-control" required>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="deadline">Deadline</label>
+                    <input type="number" name="deadline" id="deadline" class="form-control" required>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="period">Period</label>
+                    <input type="number" name="period" id="period" class="form-control" required>
+                </div>
+                <div class="form-group col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-success w-100">Ajouter</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Tableau des processus -->
+        <h4>Liste des Processus</h4>
+        <table class="table table-bordered task-table">
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Arrival Time</th>
+                    <th>Burst Time</th>
+                    <th>Deadline</th>
+                    <th>Period</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task, arrival_time, burst_time, deadline, period in data %}
+                    <tr>
+                        <td>{{ task }}</td>
+                        <td>{{ arrival_time }}</td>
+                        <td>{{ burst_time }}</td>
+                        <td>{{ deadline }}</td>
+                        <td>{{ period }}</td>
+                        <td>
+                            <!-- Formulaire de mise à jour -->
+                            <form action="{{ url_for('update_process') }}" method="POST" class="d-inline">
+                                <input type="hidden" name="task_id" value="{{ task }}">
+                                <input type="number" name="burst_time" value="{{ burst_time }}" required>
+                                <input type="number" name="arrival_time" value="{{ arrival_time }}" required>
+                                <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                            </form>
+                            <!-- Bouton de suppression -->
+                            <a href="{{ url_for('delete_process', task=task) }}" class="btn btn-danger">Supprimer</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Affichage des résultats de l'algorithme -->
+        {% if response %}
+            <h4>Résultats de l'Algorithme</h4>
+            <p><strong>Occupation CPU :</strong> {{ response['cpu_occupation'] }}</p>
+            <div class="gantt-chart">
+                <h5>Graphique de Gantt</h5>
+                <div>
+                    {{ gantt_chart_html|safe }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

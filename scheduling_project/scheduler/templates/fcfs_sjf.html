@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCFS and SJF Scheduling</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #add8e6;
+        }
+        h1, h2 {
+            color: #fff;
+        }
+        table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        table th {
+            background-color:             rgb(2, 26, 78);
+            ;
+            color: white;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        button {
+            background-color:             rgb(2, 26, 78);
+            ;
+            color: white;
+            border-radius: 5px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color:             rgb(2, 26, 78);
+            ;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .mt-4 {
+            margin-top: 2rem;
+            
+
+        }
+        .form-control {
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        label {
+            font-size: 16px;
+            color:#fff;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        .table-responsive {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .card-header {
+            background-color: rgb(2, 26, 78);
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>FCFS and SJF Scheduling</h1>
+
+        <!-- Form to add process -->
+        <div class="card">
+            <div class="card-header">Add Process</div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.as_p }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Process</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Table of Processes -->
+        <h2>Processes</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Arrival Time</th>
+                        <th>Burst Time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task, arrival, burst in tasks %}
+                    <tr>
+                        <td>{{ task }}</td>
+                        <td>{{ arrival }}</td>
+                        <td>{{ burst }}</td>
+                        <td><a href="{% url 'delete_process' %}?task={{ task }}" class="btn btn-danger btn-sm">Delete</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Algorithm Selection -->
+        <div class="card mt-4">
+            <div class="card-header">Run Algorithm</div>
+            <div class="card-body">
+                <form method="get">
+                    <div class="form-group">
+                        <label for="algorithm">Select Algorithm:</label>
+                        <select name="algorithm" id="algorithm" class="form-control">
+                            <option value="FCFS">FCFS</option>
+                            <option value="SJF Without Preemption">SJF Without Preemption</option>
+                            <option value="SJF With Preemption">SJF With Preemption</option>
+                            <option value="RM">RM</option>
+                            <option value="DM">DM</option>
+                            <option value="EDF">EDF</option>
+                            <option value="LLF">LLF</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Run</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Gantt Chart Section -->
+        {% if gantt_chart_html %}
+        <div class="mt-4">
+            <h2>Gantt Chart</h2>
+            <div>{{ gantt_chart_html|safe }}</div>
+        </div>
+        {% endif %}
+
+        <!-- Results Section -->
+        {% if response %}
+        <div class="mt-4">
+            <h2>Results</h2>
+            <p><strong>Average Waiting Time:</strong> {{ response.avg_waiting_time }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

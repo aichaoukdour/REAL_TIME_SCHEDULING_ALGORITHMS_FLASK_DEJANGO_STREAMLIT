@@ -1,0 +1,41 @@
+/* static/css/style.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 20px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.gantt-chart {
+    position: relative;
+    height: 100px;
+    background: #f4f4f4;
+    border: 1px solid #ccc;
+    margin-top: 20px;
+}
+.task {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background: #4CAF50;
+    color: white;
+    text-align: center;
+    line-height: 30px; 
+    };
+
+.gantt-bar {
+    background-color: #4CAF50;
+    height: 20px;
+    border-radius: 5px;
+}

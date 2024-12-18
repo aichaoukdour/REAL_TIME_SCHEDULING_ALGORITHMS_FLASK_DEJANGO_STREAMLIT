@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Scheduling</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #add8e6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-family: Time New Roman;
+            transition: color 0.3s ease;
+        }
+
+        h1:hover {
+            color: rgb(2, 26, 78); /* Dark Blue */
+        }
+
+        p {
+            font-size: 20px;
+            font-family: Time New Roman;
+            color: #555;
+            margin-bottom: 40px;
+            transition: color 0.3s ease;
+        }
+
+        p:hover {
+            color: rgb(2, 26, 78); /* Dark Blue */
+        }
+
+        .btn {
+            background-color: rgb(2, 26, 78); /* Dark Blue */
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 15px;
+            margin: 10px;
+            font-family: Time New Roman;
+            display: inline-block;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #00224d; /* Darker Blue */
+            transform: scale(1.1); /* Slightly enlarge the button */
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Task Scheduling with DJANGO</h1>
+        <p>Select the algorithm you want to use:</p>
+        <div class="btn-container">
+            <!-- Updated class to "btn" to match the CSS -->
+            <a href="{% url 'fcfs_sjf_page' %}" class="btn">FCFS / SJF Scheduling</a>
+            <a href="{% url 'dm_rm_edf_llf_page' %}" class="btn">DM / RM / EDF / LLF Scheduling</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DM, RM, EDF, LLF Scheduling</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+        }
+
+        h1 {
+            color: #00796b;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar {
+            background-color: #34495e;
+            color: white;
+            height: 100vh;
+            padding: 1rem;
+            position: fixed;
+            width: 300px;
+        }
+
+        .sidebar h3 {
+            color: #f0f8ff;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .sidebar .form-group label {
+            font-weight: bold;
+            color: white;
+        }
+
+        .sidebar .form-control {
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #e9f7f1;
+        }
+
+        .sidebar .btn {
+            font-weight: bold;
+            border-radius: 5px;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .main-content {
+            margin-left: 320px;
+            padding: 2rem;
+        }
+
+        .form-row .form-group {
+            margin-bottom: 1rem;
+        }
+
+        table {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+        }
+
+        table th,
+        table td {
+            padding: 15px;
+            text-align: center;
+        }
+
+        table thead {
+            background-color: #34495e;
+            color: white;
+        }
+
+        .gantt-chart-container {
+            margin-top: 2rem;
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer {
+            text-align: center;
+            color: #00796b;
+            font-size: 1rem;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h3>Select Algorithm</h3>
+        <form method="get" action="">
+            <div class="form-group">
+                <label for="algorithm">Algorithm:</label>
+                <select name="algorithm" id="algorithm" class="form-control">
+                    <option value="RM">RM</option>
+                    <option value="DM">DM</option>
+                    <option value="EDF">EDF</option>
+                    <option value="LLF">LLF</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Run Algorithm</button>
+        </form>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>DM, RM, EDF, LLF Scheduling Algorithms</h1>
+
+        <!-- Formulaire d'Ajout de Tâches -->
+        <div class="mb-4">
+            <h3>Add a Task</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="burst_time">Burst Time:</label>
+                        <input type="number" name="burst_time" id="burst_time" class="form-control" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="arrival_time">Arrival Time:</label>
+                        <input type="number" name="arrival_time" id="arrival_time" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="deadline">Deadline:</label>
+                        <input type="number" name="deadline" id="deadline" class="form-control" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="period">Period:</label>
+                        <input type="number" name="period" id="period" class="form-control" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success">Add Task</button>
+            </form>
+        </div>
+
+        <!-- Tableau des Tâches -->
+        <h3>Task List</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Arrival Time</th>
+                    <th>Burst Time</th>
+                    <th>Deadline</th>
+                    <th>Period</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task, arrival_time, burst_time, deadline, period in data %}
+                <tr>
+                    <td>{{ task }}</td>
+                    <td>{{ arrival_time }}</td>
+                    <td>{{ burst_time }}</td>
+                    <td>{{ deadline }}</td>
+                    <td>{{ period }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'update_process_dm_rm_edf_llf' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="task_id" value="{{ task }}">
+                            <input type="number" name="burst_time" placeholder="New Burst Time" class="form-control">
+                            <input type="number" name="arrival_time" placeholder="New Arrival Time" class="form-control">
+                            <button type="submit" class="btn btn-warning btn-sm mt-2">Update</button>
+                        </form>
+                        <a href="{% url 'delete_process' %}?task={{ task }}" class="btn btn-danger btn-sm mt-2">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Résultats et Diagramme de Gantt -->
+        {% if response %}
+        <div class="mt-4">
+            <h3>Algorithm Results</h3>
+            <h5>CPU Occupation: {{ response.cpu_occupation }}</h5>
+        </div>
+
+        <div class="mt-4 gantt-chart-container">
+            <h3>Gantt Chart</h3>
+            <div>
+                {{ gantt_chart_html|safe }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Pied de Page -->
+    <div class="footer">
+        <p>&copy; 2024 Scheduling Algorithm - All rights reserved.</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

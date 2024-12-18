@@ -1,4 +1,6 @@
 
+https://github.com/user-attachments/assets/f588151d-6df0-4cf3-8957-f94ccdef97d1
+
 # 🚀 Real-Time Scheduling Algorithms Project
 
 Welcome to the **Real-Time Scheduling Algorithms Project**! This project showcases the implementation of various real-time scheduling algorithms using three different frameworks: **Django**, **Flask**, and **Streamlit**. It aims to demonstrate the working of algorithms like FCFS, SJF, RM, EDF, and more, along with interactive visualizations and detailed video explanations.
@@ -6,17 +8,22 @@ Welcome to the **Real-Time Scheduling Algorithms Project**! This project showcas
 ---
 ---
 
-## 🎥 **Video Demonstrations:**
+## 🎥 Video Demonstrations:
 
-- **WITH STREAMLIT**:
+**With Streamlit:**
+https://github.com/user-attachments/assets/ebdc92ec-e332-4791-a833-688f8d72a4fe
 
-Uploading streamlit video - Made with Clipchamp (2).mp4…
-- **with flask**:
-https://github.com/user-attachments/assets/dc595cd5-18f2-422b-ace1-fef76ca1f887
 
-- **with django**:
-https://github.com/user-attachments/assets/63d5b32b-ed19-448f-835b-7f4d33b88100
-Uploading django video - Made with Clipchamp (3).mp4…
+**With Flask:**
+https://github.com/user-attachments/assets/f1f36989-3602-4b75-99d9-b0cacc28aadd
+
+
+**With Django:**
+Uploading django video - Made with Clipchamp (2).mp4…
+https://github.com/user-attachments/assets/c3eceb3e-a048-4fba-ba42-f90e9e5a339d
+
+
+
 ---
 
 ## 📋 Project Overview

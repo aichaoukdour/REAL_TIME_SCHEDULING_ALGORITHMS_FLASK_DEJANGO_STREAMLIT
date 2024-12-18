@@ -117,13 +117,7 @@ We welcome contributions! To contribute to this project:
 
 ---
 
-## 👩‍💻 **Project Team**
 
-This project was realized by the following team members:
-- **Chouaib Koraichi**
-- **Saad Nahi**
-- **Wissal Ouichou**
-- **Aicha Oukdour**
 
 
 

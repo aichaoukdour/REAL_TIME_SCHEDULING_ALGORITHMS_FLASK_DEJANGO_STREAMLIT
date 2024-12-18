@@ -10,8 +10,7 @@ Welcome to the **Real-Time Scheduling Algorithms Project**! This project showcas
 
 - **WITH STREAMLIT**:
 
- streamlit video - Made with Clipchamp (2).mp4…
-
+Uploading streamlit video - Made with Clipchamp (2).mp4…
 - **with flask**:
 https://github.com/user-attachments/assets/dc595cd5-18f2-422b-ace1-fef76ca1f887
 
